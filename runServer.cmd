@@ -1,0 +1,1 @@
+adb shell /data/data/com.example.myapplication/files/virtualMouse
