@@ -1,6 +1,7 @@
 # 测试流程
 
 adb root
+
 adb remount
 
 点击build
