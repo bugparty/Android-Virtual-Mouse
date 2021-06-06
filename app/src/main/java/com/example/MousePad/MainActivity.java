@@ -1,8 +1,5 @@
-package com.example.myapplication;
+package com.example.MousePad;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.SystemClock;
@@ -10,9 +7,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.TextView;
 
-import com.example.myapplication.databinding.ActivityMainBinding;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
+import com.example.MousePad.databinding.ActivityMainBinding;
 
 import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.MotionEvent.ACTION_MOVE;
