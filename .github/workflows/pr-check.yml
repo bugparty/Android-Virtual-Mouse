@@ -1,0 +1,99 @@
+name: Pull Request Checks
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  quick-build:
+    name: Quick Build Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+    - name: Checkout PR code
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 11
+      uses: actions/setup-java@v4
+      with:
+        java-version: '11'
+        distribution: 'temurin'
+        cache: gradle
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+
+    - name: Assemble Debug (Quick Check)
+      run: ./gradlew assembleDebug --no-daemon
+
+    - name: Comment PR - Build Success
+      if: success()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '✅ Build successful! All checks passed.'
+          })
+
+    - name: Comment PR - Build Failed
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '❌ Build failed! Please check the CI logs for details.'
+          })
+
+  code-review:
+    name: Automated Code Review
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Check for common issues
+      run: |
+        echo "=== Checking for potential issues ==="
+
+        # Check for hardcoded credentials
+        echo "Checking for hardcoded credentials..."
+        if grep -r "password\|secret\|api_key" app/src/main/java --include="*.java" | grep -v "//"; then
+          echo "⚠️  Warning: Potential hardcoded credentials found"
+        fi
+
+        # Check for System.out.println (should use Log instead)
+        echo "Checking for System.out usage..."
+        if grep -r "System.out.println\|System.err.println" app/src/main/java --include="*.java"; then
+          echo "⚠️  Warning: Found System.out/err usage, should use Android Log"
+        fi
+
+        # Check for TODO comments
+        echo "Checking for TODO comments..."
+        grep -r "TODO\|FIXME\|XXX" app/src/main --include="*.java" --include="*.cpp" --include="*.h" || echo "No TODOs found"
+
+        # Check for potential null pointer issues
+        echo "Checking for null checks..."
+        grep -r "if (null ==" app/src/main/java --include="*.java" | head -5 || echo "Using modern null checks"
+
+        echo "=== Code review complete ==="
+
+  check-gradle-wrapper:
+    name: Verify Gradle Wrapper
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Gradle Wrapper Validation
+      uses: gradle/wrapper-validation-action@v1

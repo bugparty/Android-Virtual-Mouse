@@ -22,7 +22,7 @@ add_library( # Sets the name of the library.
 
              # Provides a relative path to your source file(s).
              native-lib.cpp virtualMouse.cpp)
-add_executable(virtualMouse virtualMouse.cpp main.cpp server.cpp)
+add_executable(virtualMouse virtualMouse.cpp main.cpp Server.cpp)
 # target_link_libraries(virtualMouse pthread)
 # Searches for a specified prebuilt library and stores the path as a
 # variable. Because CMake includes system libraries in the search path by
