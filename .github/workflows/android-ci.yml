@@ -26,7 +26,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Cache Gradle packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/caches
@@ -43,7 +43,7 @@ jobs:
       continue-on-error: true
 
     - name: Upload Lint results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: lint-results
@@ -53,7 +53,7 @@ jobs:
       run: ./gradlew assembleDebug --stacktrace --no-daemon
 
     - name: Upload Debug APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: app-debug
         path: app/build/outputs/apk/debug/app-debug.apk
@@ -63,7 +63,7 @@ jobs:
       continue-on-error: true
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: build-reports
@@ -94,7 +94,7 @@ jobs:
           app/src/main/cpp/ 2>&1 | tee cppcheck-output.txt || true
 
     - name: Upload cppcheck results
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: cppcheck-results
@@ -133,7 +133,7 @@ jobs:
         find app/build -name "*.so" -o -name "virtualMouse" | head -20
 
     - name: Upload native build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: native-libraries
         path: app/build/intermediates/cmake/
@@ -159,7 +159,7 @@ jobs:
       run: ./gradlew dependencies --no-daemon > dependencies.txt || true
 
     - name: Upload dependency tree
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dependencies
         path: dependencies.txt

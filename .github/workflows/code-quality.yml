@@ -30,7 +30,7 @@ jobs:
       continue-on-error: true
 
     - name: Upload Lint Reports
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       if: always()
       with:
         name: android-lint-report
@@ -63,7 +63,7 @@ jobs:
       continue-on-error: true
 
     - name: Upload Trivy results to GitHub Security
-      uses: github/codeql-action/upload-sarif@v2
+      uses: github/codeql-action/upload-sarif@v3
       if: always()
       with:
         sarif_file: 'trivy-results.sarif'
@@ -112,7 +112,7 @@ jobs:
         grep -A5 "close\|free" app/src/main/cpp/ || true
 
     - name: Upload security analysis
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: cpp-security-analysis
         path: cppcheck-security.txt
@@ -160,7 +160,7 @@ jobs:
         } > security-report.md
 
     - name: Upload security report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: security-report
         path: security-report.md
