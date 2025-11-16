@@ -23,15 +23,18 @@ struct Packet{
         struct mouse_move move;
         struct mouse_click click;
     };
+    // Convert from host byte order to network byte order (big-endian)
     void toNet(){
-        type = ntohl(type);
-        move.x = ntohl(move.x);
-        move.y = ntohl(move.y);
-    };
-    void fromNet(){
         type = htonl(type);
         move.x = htonl(move.x);
         move.y = htonl(move.y);
+    };
+
+    // Convert from network byte order (big-endian) to host byte order
+    void fromNet(){
+        type = ntohl(type);
+        move.x = ntohl(move.x);
+        move.y = ntohl(move.y);
     };
 };
 #define BTN_MOUSE 0x110
